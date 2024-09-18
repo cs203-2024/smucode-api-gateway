@@ -6,6 +6,15 @@ spring:
         name: api-gateway
     cloud:
         gateway:
+            routes:
+                - id: user-service
+                  uri: ${USER_SERVICE_URL:http://localhost:8080}/users
+                  predicates:
+                      - Path=/users/**
+                - id: tournament-service
+                  uri: ${TOURNAMENT_SERVICE_URL:http://localhost:8081}/tournaments
+                  predicates:
+                      - Path=/users/**
             discovery:
                 locator:
                     lower-case-service-id: true
@@ -14,6 +23,6 @@ spring:
 eureka:
     client:
         enabled: false
-        # service-url:
-        #     defaultZone: http://localhost:8761/eureka
+         service-url:
+             defaultZone: http://localhost:8761/eureka
 
