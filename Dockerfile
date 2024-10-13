@@ -1,6 +1,7 @@
-FROM openjdk:17.0.2-slim
+FROM eclipse-temurin:17-jre-jammy
 
 # Add a non-root user
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 RUN groupadd -r spring && useradd -r -g spring spring
 
 WORKDIR /app
@@ -12,9 +13,9 @@ RUN chown -R spring:spring /app
 
 USER spring
 
-EXPOSE 8761
+EXPOSE 9000
 
 HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget -q --spider http://localhost:8761/actuator/health || exit 1
+  CMD wget -q --spider http://localhost:9000/actuator/health || exit 1
 
 ENTRYPOINT ["java", "-jar", "smucode-api-gateway.jar"]
