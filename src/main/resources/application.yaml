@@ -18,11 +18,18 @@ spring:
       discovery:
         locator:
           enabled: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       globalcors:
         corsConfigurations:
-          '[/**]':
+          "[/**]":
             allowedOrigins: "http://localhost:3000"
-            allowedMethods: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
             allowedHeaders: "*"
             allowCredentials: true
 
