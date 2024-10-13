@@ -2,7 +2,7 @@ name: Build image and push to ECR
 
 on: # workflow trigger on manual, PR & push to dev
   push:
-    branches: [dev, prod]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -29,16 +29,6 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Set environment variables
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/prod" ]]; then
-            echo "SPRING_PROFILE=prod" >> $GITHUB_ENV
-            echo "DOCKER_TAG=prod" >> $GITHUB_ENV
-          else
-            echo "SPRING_PROFILE=local" >> $GITHUB_ENV
-            echo "DOCKER_TAG=dev" >> $GITHUB_ENV
-          fi
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -46,7 +36,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Build with Maven
-        run: mvn clean package -Dspring.profiles.active=${{ env.SPRING_PROFILE }}
+        run: mvn clean package
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -56,10 +46,10 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ env.DOCKER_TAG }}-${{ github.sha }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.DOCKER_TAG }}
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
           docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
