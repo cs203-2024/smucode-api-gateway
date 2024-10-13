@@ -1,8 +1,0 @@
-spring:
-  cloud:
-    activate:
-      on-profile: local
-
-logging:
-  level:
-    org.cs203.smucode: DEBUG
