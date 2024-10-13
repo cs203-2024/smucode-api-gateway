@@ -15,7 +15,8 @@ USER spring
 
 EXPOSE 9000
 
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget -q --spider http://localhost:9000/actuator/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
+  CMD curl -f http://localhost:9000/actuator/health || exit 1
+
 
 ENTRYPOINT ["java", "-jar", "smucode-api-gateway.jar"]
