@@ -15,6 +15,10 @@ spring:
           uri: ${TOURNAMENT_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path=/api/tournaments/**
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URL:http://localhost:8080}
+          predicates:
+            - Path=/api/auth/**
       discovery:
         locator:
           enabled: true
