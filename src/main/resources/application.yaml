@@ -19,6 +19,10 @@ spring:
           uri: ${AUTH_SERVICE_URL:http://localhost:8080}
           predicates:
             - Path=/api/auth/**
+        - id: notification-service
+          uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8080}
+          predicates:
+            - Path=/api/notifications/**
       discovery:
         locator:
           enabled: true
