@@ -6,6 +6,23 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**
+        - id: tournament-service
+          uri: lb://tournament-service
+          predicates:
+            - Path=/api/tournaments/**
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/notifications/**
       discovery:
         locator:
           enabled: true
