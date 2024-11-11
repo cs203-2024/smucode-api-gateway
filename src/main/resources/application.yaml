@@ -8,24 +8,21 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: lb://user-service
+          uri: ${USER_SERVICE_URL:http://localhost:8080}
           predicates:
             - Path=/api/users/**
         - id: tournament-service
-          uri: lb://tournament-service
+          uri: ${TOURNAMENT_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path=/api/tournaments/**
         - id: auth-service
-          uri: lb://auth-service
+          uri: ${AUTH_SERVICE_URL:http://localhost:8080}
           predicates:
             - Path=/api/auth/**
         - id: notification-service
-          uri: lb://notification-service
+          uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8080}
           predicates:
             - Path=/api/notifications/**
-      discovery:
-        locator:
-          enabled: true
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       globalcors:
